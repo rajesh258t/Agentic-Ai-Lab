@@ -1,0 +1,13 @@
+Django is a Python web framework used for building web applications.
+
+Django follows the Model Template View architecture.
+
+Models define the structure of application data and are commonly connected to a database.
+
+Views contain the business logic of a Django application.
+
+Templates are used to generate the HTML presented to users.
+
+Django provides an Object Relational Mapper, commonly called the Django ORM. The ORM allows developers to interact with databases using Python objects instead of writing SQL for every operation.
+
+Django also provides built-in authentication, URL routing, forms, middleware, and an administrative interface.

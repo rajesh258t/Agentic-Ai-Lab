@@ -1,0 +1,13 @@
+Cybersecurity is the practice of protecting computers, networks, applications, and data from unauthorized access and attacks.
+
+Authentication verifies the identity of a user.
+
+Authorization determines what an authenticated user is allowed to access.
+
+Encryption converts readable information into an encoded form so that unauthorized users cannot easily understand it.
+
+The OWASP Top 10 is a list of important web application security risks.
+
+SQL injection occurs when an attacker is able to manipulate SQL queries through unsafe application input.
+
+Cross-Site Scripting, commonly called XSS, occurs when an attacker is able to inject malicious scripts into web pages viewed by other users.

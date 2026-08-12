@@ -1,0 +1,11 @@
+Python is a high-level programming language known for its simplicity and readability.
+
+Python supports multiple programming paradigms including procedural programming, object-oriented programming, and functional programming.
+
+Python is commonly used for web development, data science, machine learning, automation, scripting, and artificial intelligence.
+
+Python uses indentation to define blocks of code instead of curly braces.
+
+Python lists are ordered collections that can contain multiple values. Lists are mutable, which means their elements can be changed after creation.
+
+Python dictionaries store data in key-value pairs. Dictionaries are mutable and provide fast access to values using keys.

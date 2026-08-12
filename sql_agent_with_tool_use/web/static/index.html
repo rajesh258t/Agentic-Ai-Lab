@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReAct SQL Agent Studio | Lab Experiment 4</title>
+  
+  <!-- Modern Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js for Visual Data Analysis -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Header Navigation -->
+    <header class="app-header">
+      <div class="logo-group">
+        <div class="logo-icon">
+          <i class="fa-solid fa-brain-circuit"></i>
+        </div>
+        <div class="logo-text">
+          <h1>ReAct SQL Agent <span>Studio</span></h1>
+          <p class="subtitle">Laboratory Experiment 4: ReAct Agent with Database Tool Orchestration</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <div class="db-selector-wrapper">
+          <i class="fa-solid fa-database db-icon"></i>
+          <select id="db-select" class="styled-select">
+            <option value="ecommerce">E-Commerce DB (Orders & Customers)</option>
+            <option value="hr">HR Payroll DB (Employees & Depts)</option>
+            <option value="university">University DB (Courses & Grades)</option>
+          </select>
+        </div>
+
+        <div class="engine-badge">
+          <span class="pulse-dot"></span>
+          <span id="engine-status">ReAct Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="playground">
+        <i class="fa-solid fa-bolt"></i> ReAct Playground
+      </button>
+      <button class="nav-tab" data-tab="tools">
+        <i class="fa-solid fa-toolbox"></i> Tool Sandbox
+      </button>
+      <button class="nav-tab" data-tab="schema">
+        <i class="fa-solid fa-diagram-project"></i> Schema & ERD Browser
+      </button>
+      <button class="nav-tab" data-tab="benchmark">
+        <i class="fa-solid fa-chart-line"></i> Evaluation Benchmark
+      </button>
+      <button class="nav-tab" data-tab="sql-console">
+        <i class="fa-solid fa-terminal"></i> Custom SQL Console
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- TAB 1: REACT PLAYGROUND -->
+      <section id="tab-playground" class="tab-page active">
+        <div class="playground-layout">
+          
+          <!-- Left Control Panel -->
+          <div class="glass-panel search-panel">
+            <div class="panel-header">
+              <h2><i class="fa-solid fa-circle-question"></i> Ask ReAct Agent</h2>
+              <span class="badge badge-purple">Multi-Step Reasoning</span>
+            </div>
+
+            <div class="input-container">
+              <textarea id="question-input" placeholder="Ask any question in plain natural language (e.g. Which customer spent the highest total amount?)" rows="3"></textarea>
+              <button id="btn-run-agent" class="btn btn-primary">
+                <i class="fa-solid fa-play"></i> Run ReAct Agent
+              </button>
+            </div>
+
+            <div class="presets-section">
+              <h3><i class="fa-solid fa-lightbulb"></i> Recommended Preset Questions</h3>
+              <div id="preset-buttons" class="preset-chips">
+                <!-- Injected dynamically based on selected DB -->
+              </div>
+            </div>
+
+            <div class="workflow-summary-card">
+              <h4><i class="fa-solid fa-diagram-next"></i> ReAct Loop Architecture</h4>
+              <div class="loop-diagram">
+                <div class="loop-node"><i class="fa-solid fa-user"></i> Question</div>
+                <i class="fa-solid fa-arrow-right loop-arrow"></i>
+                <div class="loop-node highlight-thought"><i class="fa-solid fa-brain"></i> Thought</div>
+                <i class="fa-solid fa-arrow-right loop-arrow"></i>
+                <div class="loop-node highlight-action"><i class="fa-solid fa-wrench"></i> Action</div>
+                <i class="fa-solid fa-arrow-right loop-arrow"></i>
+                <div class="loop-node highlight-obs"><i class="fa-solid fa-eye"></i> Observation</div>
+                <i class="fa-solid fa-arrow-right loop-arrow"></i>
+                <div class="loop-node highlight-final"><i class="fa-solid fa-flag-checkered"></i> Answer</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Trace Display Panel -->
+          <div class="glass-panel trace-panel">
+            <div class="panel-header">
+              <h2><i class="fa-solid fa-list-check"></i> ReAct Execution Trajectory</h2>
+              <div class="metrics-pill" id="trace-metrics">
+                <span id="metric-steps">0 Steps</span>
+                <span class="divider">|</span>
+                <span id="metric-status">Ready</span>
+              </div>
+            </div>
+
+            <!-- Loader -->
+            <div id="agent-loader" class="loader-overlay hidden">
+              <div class="spinner"></div>
+              <p>ReAct Agent is reasoning & executing database tools...</p>
+            </div>
+
+            <!-- Trace Steps Container -->
+            <div id="trace-container" class="trace-steps-wrapper">
+              <div class="empty-state">
+                <i class="fa-solid fa-rocket empty-icon"></i>
+                <h3>Start a ReAct Agent Query</h3>
+                <p>Type a question above or click a preset question to watch the ReAct agent orchestrate database tools in real-time.</p>
+              </div>
+            </div>
+
+            <!-- Final Answer & Data Chart Output -->
+            <div id="final-answer-card" class="final-answer-box hidden">
+              <div class="final-header">
+                <i class="fa-solid fa-circle-check"></i>
+                <h3>Final Answer & Synthesized Insight</h3>
+              </div>
+              <div id="final-answer-text" class="final-body"></div>
+              <div class="chart-container-box">
+                <canvas id="playground-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 2: TOOL SANDBOX -->
+      <section id="tab-tools" class="tab-page">
+        <div class="tools-layout">
+          <div class="glass-panel tool-selector-panel">
+            <h2><i class="fa-solid fa-toolbox"></i> Database Tool Registry</h2>
+            <p>Select a tool to test individual execution behavior and parameters.</p>
+            <div id="tool-list" class="tool-cards-list">
+              <!-- Injected dynamically -->
+            </div>
+          </div>
+
+          <div class="glass-panel tool-execution-panel">
+            <div class="panel-header">
+              <h2 id="active-tool-title">Select a Tool</h2>
+              <span id="active-tool-badge" class="badge badge-cyan">Tool Execution Sandbox</span>
+            </div>
+            <p id="active-tool-desc" class="tool-description">Click any tool on the left panel to configure inputs.</p>
+
+            <div id="tool-inputs-form" class="tool-form">
+              <!-- Parameters form injected dynamically -->
+            </div>
+
+            <button id="btn-exec-tool" class="btn btn-secondary margin-top-md" disabled>
+              <i class="fa-solid fa-bolt"></i> Execute Tool Action
+            </button>
+
+            <div class="result-box margin-top-lg">
+              <h3><i class="fa-solid fa-code"></i> Execution Observation Output</h3>
+              <pre id="tool-output-json" class="code-block">Select a tool and click Execute to see raw observation JSON response...</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: SCHEMA & ERD BROWSER -->
+      <section id="tab-schema" class="tab-page">
+        <div class="glass-panel schema-container">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-diagram-project"></i> Relational Database Schema & ERD Browser</h2>
+            <button id="btn-refresh-schema" class="btn btn-sm btn-outline">
+              <i class="fa-solid fa-rotate"></i> Refresh Schema
+            </button>
+          </div>
+
+          <div id="schema-erd-grid" class="erd-grid">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: EVALUATION BENCHMARK -->
+      <section id="tab-benchmark" class="tab-page">
+        <div class="glass-panel benchmark-container">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-chart-line"></i> ReAct Agent Benchmark & Evaluation Suite</h2>
+            <button id="btn-run-benchmark" class="btn btn-primary">
+              <i class="fa-solid fa-vial"></i> Run Benchmark Suite
+            </button>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card gradient-cyan">
+              <i class="fa-solid fa-bullseye metric-icon"></i>
+              <div class="metric-info">
+                <span class="metric-label">Execution Accuracy</span>
+                <span id="bm-acc" class="metric-value">--%</span>
+              </div>
+            </div>
+
+            <div class="metric-card gradient-purple">
+              <i class="fa-solid fa-forward-step metric-icon"></i>
+              <div class="metric-info">
+                <span class="metric-label">Avg Steps / Query</span>
+                <span id="bm-steps" class="metric-value">--</span>
+              </div>
+            </div>
+
+            <div class="metric-card gradient-blue">
+              <i class="fa-solid fa-list-check metric-icon"></i>
+              <div class="metric-info">
+                <span class="metric-label">Benchmark Test Cases</span>
+                <span id="bm-total" class="metric-value">5 Cases</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="benchmark-results-section margin-top-lg">
+            <h3><i class="fa-solid fa-clipboard-list"></i> Test Case Execution Breakdown</h3>
+            <div id="benchmark-list" class="benchmark-table-container">
+              <div class="empty-state">
+                <p>Click "Run Benchmark Suite" to execute test suite and measure ReAct agent performance metrics.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: CUSTOM SQL CONSOLE -->
+      <section id="tab-sql-console" class="tab-page">
+        <div class="glass-panel sql-console-container">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-terminal"></i> Direct Read-Only SQL Console</h2>
+            <span class="badge badge-emerald">Safe Execution Engine</span>
+          </div>
+
+          <div class="sql-input-area">
+            <textarea id="sql-console-input" placeholder="SELECT * FROM customers LIMIT 10;" rows="4"></textarea>
+            <div class="sql-actions">
+              <button id="btn-run-sql" class="btn btn-primary">
+                <i class="fa-solid fa-play"></i> Execute SQL
+              </button>
+              <span id="sql-timer" class="timer-badge">0.00 ms</span>
+            </div>
+          </div>
+
+          <div class="sql-output-area margin-top-lg">
+            <h3>Query Result Grid</h3>
+            <div id="sql-results-table" class="table-scroll-container">
+              <p class="placeholder-text">Run a query to view results here.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Laboratory Experiment 4: SQL Agent with Tool Use &copy; 2026 | Built with ReAct Architecture & Vanilla Design System</p>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

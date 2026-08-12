@@ -1,0 +1,42 @@
+[
+  {
+    "id": "TC-001",
+    "database": "ecommerce",
+    "question": "Which customer has spent the highest total amount on orders?",
+    "expected_tables": ["customers", "orders"],
+    "expected_sql": "SELECT c.customer_id, c.name, SUM(o.total_amount) AS total_spent FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id ORDER BY total_spent DESC LIMIT 1;",
+    "difficulty": "Medium"
+  },
+  {
+    "id": "TC-002",
+    "database": "hr",
+    "question": "Which employee has the highest salary and in which department do they work?",
+    "expected_tables": ["employees", "departments"],
+    "expected_sql": "SELECT e.first_name, e.last_name, d.dept_name, e.salary FROM employees e JOIN departments d ON e.dept_id = d.dept_id ORDER BY e.salary DESC LIMIT 1;",
+    "difficulty": "Easy"
+  },
+  {
+    "id": "TC-003",
+    "database": "hr",
+    "question": "What is the average employee salary per department?",
+    "expected_tables": ["departments", "employees"],
+    "expected_sql": "SELECT d.dept_name, COUNT(e.emp_id) AS emp_count, ROUND(AVG(e.salary), 2) AS avg_salary FROM departments d JOIN employees e ON d.dept_id = e.dept_id GROUP BY d.dept_id, d.dept_name ORDER BY avg_salary DESC;",
+    "difficulty": "Medium"
+  },
+  {
+    "id": "TC-004",
+    "database": "university",
+    "question": "List all students enrolled in Computer Science courses with an 'A' grade.",
+    "expected_tables": ["students", "enrollments", "courses"],
+    "expected_sql": "SELECT s.name AS student_name, c.title AS course_title, e.grade FROM students s JOIN enrollments e ON s.student_id = e.student_id JOIN courses c ON e.course_id = c.course_id WHERE e.grade LIKE 'A%';",
+    "difficulty": "Hard"
+  },
+  {
+    "id": "TC-005",
+    "database": "ecommerce",
+    "question": "List all products along with their category name and price sorted from most expensive to least expensive.",
+    "expected_tables": ["products", "categories"],
+    "expected_sql": "SELECT p.product_name, c.category_name, p.price, p.stock_quantity FROM products p JOIN categories c ON p.category_id = c.category_id ORDER BY p.price DESC;",
+    "difficulty": "Easy"
+  }
+]
